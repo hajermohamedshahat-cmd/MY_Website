@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دورة الماء في الطبيعة - إنفوجرافيك واختبار تفاعلي للأطفال</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sky-top: #7dd3fc;
+            --sky-bottom: #e0f2fe;
+            --sun-color: #fde047;
+            --sun-glow: #fef08a;
+            --ocean-color: #0284c7;
+            --ocean-light: #38bdf8;
+            --cloud-white: #ffffff;
+            --cloud-grey: #cbd5e1;
+            --card-bg: rgba(255, 255, 255, 0.94);
+            --text-dark: #1e293b;
+            --success: #22c55e;
+            --error: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px rgba(2, 132, 199, 0.15);
+            border: 3px solid #bae6fd;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #0369a1;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #475569;
+            font-weight: 600;
+        }
+
+        /* Interactive Visual Stage */
+        .scene-box {
+            position: relative;
+            width: 100%;
+            height: 360px;
+            background: linear-gradient(180deg, #38bdf8 0%, #bae6fd 68%, #16a34a 68%, #15803d 100%);
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+            border: 4px solid #ffffff;
+            margin-bottom: 24px;
+        }
+
+        /* Sun */
+        .sun {
+            position: absolute;
+            top: 25px;
+            right: 40px;
+            width: 85px;
+            height: 85px;
+            background: var(--sun-color);
+            border-radius: 50%;
+            box-shadow: 0 0 40px var(--sun-glow), 0 0 80px var(--sun-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            animation: pulseSun 3s infinite ease-in-out;
+            z-index: 2;
+        }
+
+        @keyframes pulseSun {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.08) rotate(10deg); }
+        }
+
+        /* Mountains */
+        .mountain-1 {
+            position: absolute;
+            bottom: 32%;
+            left: 30px;
+            width: 0;
+            height: 0;
+            border-left: 110px solid transparent;
+            border-right: 110px solid transparent;
+            border-bottom: 160px solid #166534;
+            z-index: 1;
+        }
+        .mountain-2 {
+            position: absolute;
+            bottom: 32%;
+            left: 150px;
+            width: 0;
+            height: 0;
+            border-left: 90px solid transparent;
+            border-right: 90px solid transparent;
+            border-bottom: 130px solid #15803d;
+            z-index: 1;
+        }
+
+        /* Ocean */
+        .ocean {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 55%;
+            height: 32%;
+            background: linear-gradient(180deg, #0ea5e9 0%, #0369a1 100%);
+            border-top-left-radius: 40px;
+            z-index: 2;
+            overflow: hidden;
+        }
+
+        .wave {
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            text-align: center;
+            color: rgba(255,255,255,0.6);
+            font-size: 1.5rem;
+            letter-spacing: 8px;
+            animation: waveMove 3s infinite linear;
+        }
+
+        @keyframes waveMove {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(15px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* River */
+        .river {
+            position: absolute;
+            bottom: 12%;
+            left: 180px;
+            width: 280px;
+            height: 22px;
+            background: #38bdf8;
+            border-radius: 20px;
+            transform: rotate(8deg);
+            z-index: 1;
+            animation: flowRiver 2s infinite alternate;
+        }
+
+        @keyframes flowRiver {
+            from { opacity: 0.8; }
+            to { opacity: 1; }
+        }
+
+        /* Clouds */
+        .cloud {
+            position: absolute;
+            top: 40px;
+            left: 120px;
+            background: var(--cloud-white);
+            width: 150px;
+            height: 55px;
+            border-radius: 50px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            z-index: 3;
+            transition: all 0.5s ease;
+            animation: floatCloud 4s infinite ease-in-out;
+        }
+
+        .cloud::before, .cloud::after {
+            content: '';
+            position: absolute;
+            background: inherit;
+            border-radius: 50%;
+        }
+
+        .cloud::before {
+            width: 70px;
+            height: 70px;
+            top: -32px;
+            left: 22px;
+        }
+
+        .cloud::after {
+            width: 55px;
+            height: 55px;
+            top: -22px;
+            right: 22px;
+        }
+
+        .cloud.heavy {
+            background: #94a3b8;
+            transform: scale(1.15);
+        }
+
+        @keyframes floatCloud {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* Vapor Arrows */
+        .vapor-group {
+            position: absolute;
+            bottom: 34%;
+            right: 120px;
+            display: flex;
+            gap: 25px;
+            z-index: 3;
+            opacity: 0.3;
+            transition: opacity 0.4s;
+        }
+
+        .vapor-group.active {
+            opacity: 1;
+        }
+
+        .vapor {
+            font-size: 1.8rem;
+            color: #ffffff;
+            font-weight: bold;
+            animation: riseUp 2s infinite ease-in;
+        }
+
+        .vapor:nth-child(2) { animation-delay: 0.5s; }
+        .vapor:nth-child(3) { animation-delay: 1s; }
+
+        @keyframes riseUp {
+            0% { transform: translateY(20px); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-90px); opacity: 0; }
+        }
+
+        /* Raindrops */
+        .rain-group {
+            position: absolute;
+            top: 105px;
+            left: 140px;
+            display: flex;
+            gap: 22px;
+            z-index: 3;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .rain-group.active {
+            opacity: 1;
+        }
+
+        .drop {
+            font-size: 1.5rem;
+            animation: fallDown 1.2s infinite linear;
+        }
+
+        .drop:nth-child(2) { animation-delay: 0.3s; }
+        .drop:nth-child(3) { animation-delay: 0.6s; }
+        .drop:nth-child(4) { animation-delay: 0.9s; }
+
+        @keyframes fallDown {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(130px); opacity: 0; }
+        }
+
+        /* Controls Bar */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: #0284c7;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            background: #0369a1;
+        }
+
+        .btn.secondary {
+            background: #f59e0b;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        /* Stage Cards Grid */
+        .stages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .stage-card {
+            background: var(--card-bg);
+            border-radius: 22px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            border: 3px solid transparent;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .stage-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stage-card.active {
+            border-color: #0284c7;
+            background: #ffffff;
+            transform: scale(1.04);
+            box-shadow: 0 12px 28px rgba(2, 132, 199, 0.22);
+        }
+
+        .stage-number {
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background: #0284c7;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stage-icon {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+        }
+
+        .stage-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .stage-desc {
+            font-size: 0.95rem;
+            color: #475569;
+            line-height: 1.5;
+        }
+
+        /* Fact Banner */
+        .fact-banner {
+            background: #fef9c3;
+            border: 3px dashed #eab308;
+            border-radius: 20px;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 6px 15px rgba(234, 179, 8, 0.15);
+            margin-bottom: 32px;
+        }
+
+        .fact-icon {
+            font-size: 2.5rem;
+        }
+
+        .fact-content h3 {
+            color: #854d0e;
+            font-size: 1.15rem;
+            margin-bottom: 4px;
+        }
+
+        .fact-content p {
+            color: #713f12;
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        /* Interactive Quiz Section */
+        .quiz-section {
+            background: var(--card-bg);
+            border-radius: 28px;
+            padding: 28px;
+            box-shadow: 0 12px 30px rgba(2, 132, 199, 0.15);
+            border: 4px solid #7dd3fc;
+            margin-bottom: 24px;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 14px;
+        }
+
+        .quiz-header h2 {
+            color: #0369a1;
+            font-size: 1.6rem;
+            font-weight: 900;
+        }
+
+        .score-badge {
+            background: #fef08a;
+            color: #854d0e;
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            border: 2px solid #eab308;
+        }
+
+        .question-box {
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 16px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+        }
+
+        .option-btn {
+            background: #f0f9ff;
+            border: 2px solid #bae6fd;
+            border-radius: 16px;
+            padding: 14px 18px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #0369a1;
+            cursor: pointer;
+            text-align: right;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: #e0f2fe;
+            transform: translateY(-2px);
+        }
+
+        .option-btn.correct {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #15803d;
+        }
+
+        .option-btn.wrong {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #b91c1c;
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .feedback-msg {
+            margin-top: 16px;
+            padding: 12px 18px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 1.05rem;
+            display: none;
+        }
+
+        .feedback-msg.show {
+            display: block;
+        }
+
+        .feedback-msg.success {
+            background: #dcfce7;
+            color: #15803d;
+            border: 2px solid #86efac;
+        }
+
+        .feedback-msg.error {
+            background: #fee2e2;
+            color: #b91c1c;
+            border: 2px solid #fca5a5;
+        }
+
+        .quiz-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .paused * {
+            animation-play-state: paused !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>💧 رحلة قطرة الماء العجيبة 🌤️</h1>
+        <p>اضغط على كل مرحلة لتتعرف كيف يدور الماء في الطبيعة، ثم اختبر معلوماتك في الأسفل!</p>
+    </header>
+
+    <!-- Animated Scene -->
+    <div class="scene-box" id="sceneBox">
+        <div class="sun" title="الشمس الدافئة">☀️</div>
+        
+        <div class="cloud" id="cloud">
+            <span style="z-index: 4;">😊</span>
+        </div>
+
+        <div class="rain-group" id="rainGroup">
+            <span class="drop">💧</span>
+            <span class="drop">💧</span>
+            <span class="drop">💧</span>
+            <span class="drop">💧</span>
+        </div>
+
+        <div class="vapor-group active" id="vaporGroup">
+            <span class="vapor">⬆️</span>
+            <span class="vapor">♨️</span>
+            <span class="vapor">⬆️</span>
+        </div>
+
+        <div class="mountain-1"></div>
+        <div class="mountain-2"></div>
+        <div class="river"></div>
+
+        <div class="ocean">
+            <div class="wave">〰️ 〰️ 〰️ 〰️ 〰️</div>
+        </div>
+    </div>
+
+    <!-- Interactive Controls -->
+    <div class="controls">
+        <button class="btn" id="nextBtn">المرحلة التالية ⏭️</button>
+        <button class="btn secondary" id="toggleAnimBtn">⏸️ إيقاف الحركة مؤقتاً</button>
+    </div>
+
+    <!-- 4 Stages Cards -->
+    <div class="stages-grid">
+        <div class="stage-card active" data-stage="0">
+            <div class="stage-number">1</div>
+            <div class="stage-icon">☀️♨️</div>
+            <div class="stage-title">التبخر (Evaporation)</div>
+            <div class="stage-desc">تُسخّن أشعة الشمس مياه البحار والأنهار، فيتحول الماء إلى بخار خفيف يصعد إلى السماء.</div>
+        </div>
+
+        <div class="stage-card" data-stage="1">
+            <div class="stage-number">2</div>
+            <div class="stage-icon">☁️❄️</div>
+            <div class="stage-title">التكاثف (Condensation)</div>
+            <div class="stage-desc">عندما يبرد بخار الماء في الأعلى، يتجمع معاً ليشكّل سحباً بيضاء جميلة ومليئة بالقطرات.</div>
+        </div>
+
+        <div class="stage-card" data-stage="2">
+            <div class="stage-number">3</div>
+            <div class="stage-icon">🌧️🌱</div>
+            <div class="stage-title">الهطول (Precipitation)</div>
+            <div class="stage-desc">تصبح السحب ثقيلة ومليئة بالماء، فتتساقط القطرات على شكل أمطار تروي الأرض والنباتات.</div>
+        </div>
+
+        <div class="stage-card" data-stage="3">
+            <div class="stage-number">4</div>
+            <div class="stage-icon">🌊🔄</div>
+            <div class="stage-title">التجمع (Collection)</div>
+            <div class="stage-desc">تعود مياه الأمطار عبر الأنهار والوديان إلى البحار والمحيطات لتبدأ الرحلة من جديد!</div>
+        </div>
+    </div>
+
+    <!-- Kid-Friendly Fun Fact Box -->
+    <div class="fact-banner">
+        <div class="fact-icon">💡</div>
+        <div class="fact-content">
+            <h3 id="factTitle">هل تعلم؟ (مرحلة التبخر)</h3>
+            <p id="factText">البخار غير مرئي في الهواء، تماماً مثل البخار الذي تراه يتصاعد من كوب الشاي الساخن!</p>
+        </div>
+    </div>
+
+    <!-- Interactive Quiz Section -->
+    <section class="quiz-section">
+        <div class="quiz-header">
+            <h2>🏆 تحدي الأبطال: اختبر معلوماتك!</h2>
+            <div class="score-badge" id="scoreBadge">النتيجة: 0 / 4 ⭐</div>
+        </div>
+
+        <div class="question-box" id="quizContainer">
+            <div class="question-text" id="questionText"></div>
+            <div class="options-grid" id="optionsGrid"></div>
+            <div class="feedback-msg" id="feedbackMsg"></div>
+        </div>
+
+        <div class="quiz-footer">
+            <span id="questionCounter" style="font-weight: 700; color: #475569;">السؤال 1 من 4</span>
+            <button class="btn" id="nextQuestionBtn" style="display: none;">السؤال التالي ⬅️</button>
+            <button class="btn secondary" id="restartQuizBtn" style="display: none;">🔄 إعادة الاختبار</button>
+        </div>
+    </section>
+</div>
+
+<script>
+    // 1. Infographic Stages Logic
+    const stagesData = [
+        {
+            title: "هل تعلم؟ (مرحلة التبخر)",
+            fact: "البخار غير مرئي في الهواء، تماماً مثل البخار الذي تراه يتصاعد من كوب الشاي الساخن!",
+            vapor: true,
+            rain: false,
+            heavyCloud: false
+        },
+        {
+            title: "هل تعلم؟ (مرحلة التكاثف)",
+            fact: "تتكون السحابة الواحدة من ملايين القطرات الصغيرة جداً لدرجة أنها تطفو في الهواء!",
+            vapor: false,
+            rain: false,
+            heavyCloud: true
+        },
+        {
+            title: "هل تعلم؟ (مرحلة الهطول)",
+            fact: "إذا كان الجو بارداً جداً في السماء، يتجمد المطر وينزل على شكل ثلج أبيض ناعم أو بَرَد!",
+            vapor: false,
+            rain: true,
+            heavyCloud: true
+        },
+        {
+            title: "هل تعلم؟ (مرحلة التجمع)",
+            fact: "الماء الذي نشربه اليوم هو نفسه الماء الذي كان موجوداً على الأرض منذ ملايين السنين!",
+            vapor: true,
+            rain: false,
+            heavyCloud: false
+        }
+    ];
+
+    let currentStage = 0;
+    let isPlaying = true;
+
+    const cards = document.querySelectorAll('.stage-card');
+    const vaporGroup = document.getElementById('vaporGroup');
+    const rainGroup = document.getElementById('rainGroup');
+    const cloud = document.getElementById('cloud');
+    const factTitle = document.getElementById('factTitle');
+    const factText = document.getElementById('factText');
+    const sceneBox = document.getElementById('sceneBox');
+    const toggleAnimBtn = document.getElementById('toggleAnimBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function updateStage(index) {
+        currentStage = index;
+        cards.forEach((card, i) => card.classList.toggle('active', i === index));
+        const data = stagesData[index];
+        vaporGroup.classList.toggle('active', data.vapor);
+        rainGroup.classList.toggle('active', data.rain);
+        cloud.classList.toggle('heavy', data.heavyCloud);
+        factTitle.textContent = data.title;
+        factText.textContent = data.fact;
+    }
+
+    cards.forEach((card, index) => {
+        card.addEventListener('click', () => updateStage(index));
+    });
+
+    nextBtn.addEventListener('click', () => {
+        updateStage((currentStage + 1) % stagesData.length);
+    });
+
+    toggleAnimBtn.addEventListener('click', () => {
+        isPlaying = !isPlaying;
+        sceneBox.classList.toggle('paused', !isPlaying);
+        toggleAnimBtn.textContent = isPlaying ? '⏸️ إيقاف الحركة مؤقتاً' : '▶️ تشغيل الحركة';
+    });
+
+    updateStage(0);
+
+    // 2. Interactive Quiz Logic
+    const quizQuestions = [
+        {
+            question: "1. ما الذي يُسخّن مياه البحار والأنهار ليجعلها تتبخر وتصعد للسماء؟",
+            options: ["أشعة الشمس الدافئة ☀️", "ضوء القمر 🌙", "الرياح الباردة 🌬️"],
+            correct: 0,
+            explanation: "أحسنت! حرارة الشمس هي المحرك الرئيسي الذي يحوّل الماء السائل إلى بخار."
+        },
+        {
+            question: "2. ماذا يحدث لبخار الماء عندما يصعد إلى الأعلى ويبرد؟",
+            options: ["يتحول إلى تراب 🏜️", "يتكاثف ويشكّل السحب ☁️", "يختفي تماماً ✨"],
+            correct: 1,
+            explanation: "رائع! عندما يبرد البخار يتجمع على شكل قطرات صغيرة تصنع السحب."
+        },
+        {
+            question: "3. كيف نسمي مرحلة نزول الماء من السحب على شكل مطر أو ثلج؟",
+            options: ["التبخر ♨️", "التجمع 🌊", "الهطول 🌧️"],
+            correct: 2,
+            explanation: "ممتاز! الهطول هو عودة الماء من السحب إلى الأرض على هيئة أمطار أو ثلوج."
+        },
+        {
+            question: "4. أين تتجمع مياه الأمطار في النهاية لتبدأ دورة الماء من جديد؟",
+            options: ["في البحار والمحيطات والأنهار 🌊", "فوق قمم الأشجار فقط 🌳", "داخل السحب مباشرة ☁️"],
+            correct: 0,
+            explanation: "إجابة ذكية! تعود المياه عبر الأنهار إلى البحار والمحيطات لتتكرر الدورة باستمرار."
+        }
+    ];
+
+    let currentQIndex = 0;
+    let score = 0;
+
+    const questionText = document.getElementById('questionText');
+    const optionsGrid = document.getElementById('optionsGrid');
+    const feedbackMsg = document.getElementById('feedbackMsg');
+    const scoreBadge = document.getElementById('scoreBadge');
+    const questionCounter = document.getElementById('questionCounter');
+    const nextQuestionBtn = document.getElementById('nextQuestionBtn');
+    const restartQuizBtn = document.getElementById('restartQuizBtn');
+
+    function loadQuestion() {
+        const q = quizQuestions[currentQIndex];
+        questionText.textContent = q.question;
+        questionCounter.textContent = `السؤال ${currentQIndex + 1} من ${quizQuestions.length}`;
+        optionsGrid.innerHTML = '';
+        feedbackMsg.className = 'feedback-msg';
+        feedbackMsg.textContent = '';
+        nextQuestionBtn.style.display = 'none';
+
+        q.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.textContent = opt;
+            btn.addEventListener('click', () => handleAnswer(idx, btn));
+            optionsGrid.appendChild(btn);
+        });
+    }
+
+    function handleAnswer(selectedIndex, clickedBtn) {
+        const q = quizQuestions[currentQIndex];
+        const allBtns = optionsGrid.querySelectorAll('.option-btn');
+        allBtns.forEach(b => b.disabled = true);
+
+        if (selectedIndex === q.correct) {
+            clickedBtn.classList.add('correct');
+            score++;
+            scoreBadge.textContent = `النتيجة: ${score} / ${quizQuestions.length} ⭐`;
+            feedbackMsg.textContent = `🎉 إجابة صحيحة! ${q.explanation}`;
+            feedbackMsg.className = 'feedback-msg show success';
+        } else {
+            clickedBtn.classList.add('wrong');
+            allBtns[q.correct].classList.add('correct');
+            feedbackMsg.textContent = `💡 حاول مرة أخرى في المرة القادمة! ${q.explanation}`;
+            feedbackMsg.className = 'feedback-msg show error';
+        }
+
+        if (currentQIndex < quizQuestions.length - 1) {
+            nextQuestionBtn.style.display = 'inline-block';
+        } else {
+            restartQuizBtn.style.display = 'inline-block';
+            questionCounter.textContent = `انتهى الاختبار! نتيجتك النهائية: ${score} من ${quizQuestions.length} 🏆`;
+        }
+    }
+
+    nextQuestionBtn.addEventListener('click', () => {
+        currentQIndex++;
+        loadQuestion();
+    });
+
+    restartQuizBtn.addEventListener('click', () => {
+        currentQIndex = 0;
+        score = 0;
+        scoreBadge.textContent = `النتيجة: 0 / ${quizQuestions.length} ⭐`;
+        restartQuizBtn.style.display = 'none';
+        loadQuestion();
+    });
+
+    loadQuestion();
+</script>
+
+</body>
+</html>
